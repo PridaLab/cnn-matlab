@@ -1,7 +1,7 @@
 clc; clear; close all;
 test_path = fileparts(matlab.desktop.editor.getActiveFilename);
 cnn_path = fileparts(test_path);
-addpath(test_path); addpath(cnn_path);
+addpath(test_path); addpath(cnn_path); addpath(fullfile(cnn_path, 'auxiliar'))
 
 % === uLED or Npx probes ==================================================
 
@@ -27,7 +27,7 @@ set(gca, 'ytick', []); xlabel('Time (sec)')
 
 % Plot ripple probability
 hold on
-plot(itimes/fs, SWR_prob(itimes,:), 'b')
+plot(itimes/fs, SWR_prob(itimes), 'b')
 set(gca, 'ytick', [0 1]); xlabel('Time (sec)')
 
 % Plot ground truth
