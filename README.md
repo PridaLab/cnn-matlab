@@ -5,7 +5,9 @@ This ripple detector uses a Convolutional Neural Network (CNN) originally create
 
 ## Installation
 
-1. Open your anaconda terminal, and to your "cnn_matlab" folder by typing:
+For this script you should have [anaconda](https://www.anaconda.com/products/distribution) installed. Here are the steps to install python packages.
+
+1. Open your anaconda terminal, and go to your "cnn-matlab" folder by typing:
 
 		cd <full path to cnn_matlab folder>
 
@@ -18,7 +20,7 @@ This ripple detector uses a Convolutional Neural Network (CNN) originally create
 		conda activate cnn-env
 		echo %CONDA_PREFIX%
 
-4. That path corresponds to the optional input variable "exec_env".
+4. That path corresponds to the optional input variable "exec_env", an input of `detect_ripples_cnn()` function.
 
 
 ## Using Tensorflow from Matlab
@@ -63,4 +65,4 @@ In order to get time intervals of SWRs, a threshold must be chosen. You can use 
 
 ## Example
 
-In the [test folder](https://github.com/PridaLab/cnn-matlab/tree/master/test) you can find a test script `test_cnn_matlab.m` that downloads a recording from figshare and runs the CNN detection for several configurations, including dead channels.
+In the [test folder](https://github.com/PridaLab/cnn-matlab/tree/master/test) you can find a test main script `test_cnn_matlab.m` that downloads a recording from figshare and runs the CNN detection for several configurations, including dead channels.
