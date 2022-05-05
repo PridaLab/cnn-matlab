@@ -13,7 +13,10 @@ function y_pred = detect_ripples_cnn(data, fs, varargin)
 %%%                 containing this file.
 %%%    channels     (optional) List of 8 channels to use for the
 %%%                 prediction. By default it takes the first 8 channels
-%%%    threshold    (optional) 0.5 by default
+%%%    pred_every   (optional)  Time window of predictions. By default is
+%%%                 32ms, for which CNN works significantly fastest. If 
+%%%                 smaller sliding windows are preferred, then any other 
+%%%                 number can be selected.
 %%%
 %%% Output:
 %%%    y_pred       Ripple probability (from 0 to 1) per sample
@@ -27,20 +30,21 @@ function y_pred = detect_ripples_cnn(data, fs, varargin)
     % Get optional values
     p = inputParser;
     addParameter(p,'channels', 1:8, @isnumeric);
-    addParameter(p,'threshold', 0.5, @isnumeric);
     addParameter(p,'model_file', '', @ischar);
+    addParameter(p,'pred_every', 0.032, @isnumeric);
     addParameter(p,'exec_env', '/home/andrea/anaconda3/envs/tfenv37/bin/python3.7', @ischar);
     addParameter(p,'save', {}, @isstruct);
     parse(p,varargin{:});
     channels = p.Results.channels;
-    threshold = p.Results.threshold;
+    pred_every = p.Results.pred_every;
     model_file = p.Results.model_file;
     exec_env = p.Results.exec_env;
-    dir_project = fileparts(matlab.desktop.editor.getActiveFilename);
+    dir_project = fileparts(which('detect_ripples_cnn.m'));
     
+
     % Model file
     if isempty(model_file)
-        model_file = fullfile(fileparts(matlab.desktop.editor.getActiveFilename), 'cnn');
+        model_file = fullfile(dir_project, 'cnn');
     end
     
     % -----------------------
@@ -75,7 +79,7 @@ function y_pred = detect_ripples_cnn(data, fs, varargin)
     % ----------------------- 
 
     % Predict
-    y_pred = single(py.cnn.func(data, channels, fs, model_file, threshold));
+    y_pred = single(py.cnn.predict(data, channels, fs, model_file, pred_every));
 
 
 end

@@ -76,7 +76,7 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 	# Errors
 	if len(channels_list) != 8:
 		raise Exception('Input "channel_list" must contain 8 elements')
-	if any(channels_list<=0) or any(channels_list>=data.shape[1]):
+	if any(channels_list<0) or any(channels_list>=data.shape[1]):
 		raise Exception('Input "channel_list" contains invalid channel numbers')
 
 	if verbose:
@@ -102,10 +102,10 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 	
 	# Predict
 	every = int(pred_every * downsampled_fs)
-	if pred_every == 0.032:
+	if pred_every == window_size:
 		y_pred = model.model_predict(data, batch_size=1, verbose=True)
 	else:
-		lfpred = np.array([lfpred[i:i+window_len] for i in range(0,len(idxs)-window_len-1,every)])
+		lfpred = np.array([data[i:i+window_len,:] for i in range(0,data.shape[0]-window_len-1,every)])
 		y_pred = model.model_predict(lfpred).reshape(1,-1)
 
 	# One prediction per sample (instead of per window)

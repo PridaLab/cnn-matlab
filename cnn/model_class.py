@@ -1,6 +1,7 @@
 import tensorflow.keras.backend as K
 import tensorflow.keras as kr
 import numpy as np
+import os
 
 
 class ModelClass:
@@ -172,7 +173,7 @@ class ModelClass:
 
 
 	def save_model(self, path, tag):
-		self.model.save(path+"/cnn_model"+tag)
+		self.model.save(os.path.join(path,"cnn_model"+tag))
 
 	
 	def model_summary(self):
@@ -200,7 +201,7 @@ class ModelClass:
 
 		# Save weights of all epochs of training
 		if len(save_training_path) > 0:
-			save_training_callback = kr.callbacks.ModelCheckpoint(save_training_path+"/weights_{epoch:04d}.hdf5")
+			save_training_callback = kr.callbacks.ModelCheckpoint(os.path.join(save_training_path,"weights_{epoch:04d}.hdf5"))
 			callbacks.append(save_training_callback)
 
 
