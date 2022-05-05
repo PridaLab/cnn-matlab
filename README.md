@@ -1,5 +1,6 @@
 # CNN-ripple detector for MATLAB
 
+This ripple detector uses a Convolutional Neural Network (CNN) originally created for python in [this repository](https://github.com/PridaLab/cnn-ripple). This code is a version that internally calls the python function to output a ripple probability along time.
 
 
 ## Installation
@@ -59,3 +60,7 @@ In order to get time intervals of SWRs, a threshold must be chosen. You can use 
 * **Getting the intervals**
 	Once the threshold is set, it automatically finds the intervals where `SWR_prob` is over that threshold. The output of `get_intervals()` is a `n_ripples` x 2 array of beginnings and ends. If `fs` has been given, the output is in seconds; if it's not given, then the output is in timestamps.
 
+
+## Example
+
+In the [test folder](https://github.com/PridaLab/cnn-matlab/tree/master/test) you can find a test script `test_cnn_matlab.m` that downloads a recording from figshare and runs the CNN detection for several configurations, including dead channels.
