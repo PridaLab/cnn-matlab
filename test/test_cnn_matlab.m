@@ -13,14 +13,9 @@ addpath(test_path); addpath(cnn_path);
 % -- Detect ---
 
 % Detect probability of ripple
-if false
-    conda_env = 'C:\Users\Usuario\anaconda3\envs\cnn-env';
-    SWR_prob = detect_ripples_cnn(lfp, fs, 'exec_env', conda_env);
-else
-    fileID = fopen(fullfile(test_path, 'prediction.txt'),'r');
-    SWR_prob = fscanf(fileID, '%f');
-    fclose(fileID);
-end
+conda_env = 'C:\Users\Usuario\anaconda3\envs\cnn-env';
+SWR_prob = detect_ripples_cnn(lfp, fs, 'exec_env', conda_env);
+
 
 % -- Plot ---
 
