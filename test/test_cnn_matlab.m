@@ -41,6 +41,12 @@ end
 % Get intervals
 ripples = get_intervals(SWR_prob, 'LFP', lfp, 'fs', fs, 'win_size', 0.100);
 
+% Manual curation
+channel_ripple = 4;
+ripples = ripple_manual_selection(lfp, ripples, channel_ripple, fs, ...
+                'autosave', fullfile(test_path, 'data', 'autosave.mat'), ...
+                'save_name', fullfile(test_path, 'data', 'ripples.png'));
+
 
 % === Dead channels =======================================================
 
