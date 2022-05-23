@@ -186,7 +186,7 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 	elif 'max' in handle_overlap:
 		f_overlap = np.max
 	else:
-		raise Exception("Input "handle_overlap" must contain be 'mean' or 'max'")
+		raise Exception("Input 'handle_overlap' must contain be 'mean' or 'max'")
 
 	if verbose:
 		print("Input data shape: ", data.shape)
