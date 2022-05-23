@@ -7,16 +7,44 @@ function intervals = get_intervals(SWR_prob, varargin)
     addParameter(p,'LFP',[], @isnumeric);
     addParameter(p,'fs',1, @isnumeric); % Hz
     addParameter(p,'win_size',0.050, @isnumeric); % sec
+    addParameter(p,'discard_drift',true, @islogical); % sec
+    addParameter(p,'std_discard',1, @isnumeric); % sec
     parse(p,varargin{:});
     threshold_default = p.Results.threshold_default;
     threshold = p.Results.threshold;
     LFP = p.Results.LFP;
     fs = p.Results.fs;
     win_size = p.Results.win_size;
+    discard_drift = p.Results.discard_drift;
+    std_discard = p.Results.std_discard;
     
     if ~isempty(LFP)
+
+        % z-scored
         LFP = LFP - mean(LFP,1);
         LFP = LFP ./ std(LFP,1);
+
+        % Discard drift
+        discard = zeros(size(LFP,1), 1);
+
+        if discard_drift
+
+            % Moving window
+            if fs == 1 
+                move_win = 1000;
+                warning('Sampling frequency not given, so moving window is set to 1000 samples')
+            else
+                move_win = win_size*fs*10;
+            end
+            mean_LFP_smooth = movmean(abs(mean(LFP,2)), move_win);
+
+            % Discard times with drift above 'std_discard' standard deviations
+            discard = mean_LFP_smooth > std_discard; %SD
+
+            % Make SWR_prob zero in discarded times
+            SWR_prob(discard) = 0;
+        end
+
     end
 
     % === Use GUI to define threshold =====================================
