@@ -140,14 +140,14 @@ def integrate_window_to_sample(win_data, stride, fs, n_samples=None, func=np.mea
 			win_list.append(win_list[-1]+1) #append new window
 			if len(win_list)>max_win_overlap: #pop left-most window if aready maximum overlapping
 			    win_list.pop(0)
-			if win_list[-1]>max_num_win: #discard added window if beyond maximum number of windows
+			if win_list[-1]>=max_num_win: #discard added window if beyond maximum number of windows
 			    win_list.pop(-1)
 		sample_data[sample:sample+stride_pts] = func(win_data[win_list])
 
 	return sample_data
 
 
-def predict(data_original, channels_list, fs, model_file, pred_every=window_size, verbose=False):
+def predict(data_original, channels_list, fs, model_file, pred_every=window_size, handle_overlap = 'mean', verbose=False):
 	'''
 	This function outputs a SWR probability along time:
 		
@@ -162,6 +162,7 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 		pred_every: 	(optional) Prediction window size. By default is 0.032 seconds,
 						but it can be change to any other value less than that, at expense
 						of taking a considerably more amount of time
+		handle_overlap  (optional) Determines the way 
 		verbose:		(optional) Print messages. By default is False
 	
 	Outputs:
@@ -179,6 +180,12 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 		raise Exception('Input "channel_list" must contain 8 elements')
 	if any(channels_list<0) or any(channels_list>=data.shape[1]):
 		raise Exception('Input "channel_list" contains invalid channel numbers')
+	if 'mean' in handle_overlap:
+		f_overlap = np.mean
+	elif 'max' in handle_overlap:
+		f_overlap = np.max
+	else:
+		raise Exception("Input "handle_overlap" must contain be 'mean' or 'max'")
 
 	if verbose:
 		print("Input data shape: ", data.shape)
@@ -226,7 +233,7 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 
 
 	# One prediction per sample (instead of per window)
-	y_pred_sample = integrate_window_to_sample(y_pred_win, pred_every, downsampled_fs, n_samples=data.shape[0], func=np.mean)
+	y_pred_sample = integrate_window_to_sample(y_pred_win, pred_every, downsampled_fs, n_samples=data.shape[0], func=f_overlap)
 
 	# Transform to original fs
 	prediction_fs = resample_data(y_pred_sample.reshape(-1,1), from_fs=downsampled_fs, to_fs=fs).flatten()
