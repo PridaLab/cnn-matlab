@@ -9,7 +9,9 @@ function intervals = get_intervals(SWR_prob, varargin)
     addParameter(p,'win_size',0.050, @isnumeric); % sec
     addParameter(p,'discard_drift',true, @islogical); % sec
     addParameter(p,'std_discard',1, @isnumeric); % sec
+    addParameter(p, 'min_duration',0.02, @isnumeric); %sec
     parse(p,varargin{:});
+
     threshold_default = p.Results.threshold_default;
     threshold = p.Results.threshold;
     LFP = p.Results.LFP;
@@ -17,7 +19,8 @@ function intervals = get_intervals(SWR_prob, varargin)
     win_size = p.Results.win_size;
     discard_drift = p.Results.discard_drift;
     std_discard = p.Results.std_discard;
-    
+    min_duration = p.Results.min_duration;
+
     if ~isempty(LFP)
 
         % z-scored
@@ -127,7 +130,7 @@ function intervals = get_intervals(SWR_prob, varargin)
     end
 
     % Get intervals
-    intervals = get_intervals_from_threshold(SWR_prob, threshold, fs);
+    intervals = get_intervals_from_threshold(SWR_prob, threshold, min_duration, fs);
     
     close;
     
@@ -144,7 +147,7 @@ function intervals = get_intervals(SWR_prob, varargin)
         threshold = mean(get(threshold_plot,'XData'));
         
         % Get intervals
-        intervals = get_intervals_from_threshold(SWR_prob, threshold, fs);
+        intervals = get_intervals_from_threshold(SWR_prob, threshold, min_duration, fs);
         n_detections = size(intervals, 1);
         
         % Plot examples
@@ -186,10 +189,9 @@ end
 
 
 
-function intervals = get_intervals_from_threshold(SWR_prob, threshold, fs)
+function intervals = get_intervals_from_threshold(SWR_prob, threshold, min_duration, fs)
 
     SWR_prob = reshape(SWR_prob, [], 1);
-
     % Over threshold
     over_threshold = (SWR_prob >= threshold);
     
@@ -208,6 +210,8 @@ function intervals = get_intervals_from_threshold(SWR_prob, threshold, fs)
     
     % Make intervals
     intervals = [inis, ends]/fs;
+    % Discard intervals shorter than min_duration
+    intervals(diff(intervals,1,2)<min_duration,:) = [];
     
 end
 
