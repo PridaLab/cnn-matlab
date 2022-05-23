@@ -16,7 +16,7 @@ For this script you should have [anaconda](https://www.anaconda.com/products/dis
 
 2. Then make a new anaconda environment with:
 
-		create --name cnn-env python=3.8 tensorflow=2.3 keras=2.4 numpy=1.18 h5py=2.10
+		conda create --name cnn-env python=3.8 tensorflow=2.3 keras=2.4 numpy=1.18 h5py=2.10
 
 3. Copy the path of the environment that outputs the following command:
 
