@@ -180,6 +180,7 @@ def predict(data_original, channels_list, fs, model_file, pred_every=window_size
 		raise Exception('Input "channel_list" must contain 8 elements')
 	if any(channels_list<0) or any(channels_list>=data.shape[1]):
 		raise Exception('Input "channel_list" contains invalid channel numbers')
+	assert isinstance(handle_overlap, str), "input 'handle_overlap' must be a string ('mean' or 'max')"
 	if 'mean' in handle_overlap:
 		f_overlap = np.mean
 	elif 'max' in handle_overlap:
