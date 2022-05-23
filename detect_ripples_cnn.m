@@ -3,20 +3,25 @@ function y_pred = detect_ripples_cnn(data, fs, varargin)
 %%%  Uses the CNN model to predict ripples of a given data
 %%%
 %%% Inputs:
-%%%    data         Time x channels LFP matrix
-%%%    fs           Sampling frequency
-%%%    exec_env     (optional) Full path to python executable of the
-%%%                 environment containing tensorflow. By default is
-%%%                     /home/andrea/anaconda3/envs/rip_env/bin/python3.7
-%%%    model_file   (optional) Full path to folder where the CNN model is
-%%%                 stored. By default searches in 'cnn/' inside the folder
-%%%                 containing this file.
-%%%    channels     (optional) List of 8 channels to use for the
-%%%                 prediction. By default it takes the first 8 channels
-%%%    pred_every   (optional)  Time window of predictions. By default is
-%%%                 32ms, for which CNN works significantly fastest. If 
-%%%                 smaller sliding windows are preferred, then any other 
-%%%                 number can be selected.
+%%%    data             Time x channels LFP matrix
+%%%    fs               Sampling frequency
+%%%    exec_env         (optional) Full path to python executable of the
+%%%                     environment containing tensorflow. By default is
+%%%                         /home/andrea/anaconda3/envs/rip_env/bin/python3.7
+%%%    model_file       (optional) Full path to folder where the CNN model is
+%%%                     stored. By default searches in 'cnn/' inside the folder
+%%%                     containing this file.
+%%%    channels         (optional) List of 8 channels to use for the
+%%%                     prediction. By default it takes the first 8 channels
+%%%    pred_every       (optional)  Time window of predictions. By default is
+%%%                     32ms, for which CNN works significantly fastest. If 
+%%%                     smaller sliding windows are preferred, then any other 
+%%%                     number can be selected.
+%%%    handle_overlap   (optional) In order to handle prediction of overlapping 
+%%%                     windows, choose to do the 'mean' (by default) or 'max'
+%%%                     By default is false
+%%%    verbose          (optional) Print description of internal processes. 
+%%%                     By default is false
 %%%
 %%% Output:
 %%%    y_pred       Ripple probability (from 0 to 1) per sample
@@ -32,12 +37,15 @@ function y_pred = detect_ripples_cnn(data, fs, varargin)
     addParameter(p,'channels', 1:8, @isnumeric);
     addParameter(p,'model_file', '', @ischar);
     addParameter(p,'pred_every', 0.032, @isnumeric);
+    addParameter(p,'verbose', false, @islogical);
+    addParameter(p,'handle_overlap', 'mean', @ischar);
     addParameter(p,'exec_env', '/home/andrea/anaconda3/envs/tfenv37/bin/python3.7', @ischar);
-    addParameter(p,'save', {}, @isstruct);
     parse(p,varargin{:});
     channels = p.Results.channels;
     pred_every = p.Results.pred_every;
+    verbose = p.Results.verbose;
     model_file = p.Results.model_file;
+    handle_overlap = p.Results.handle_overlap;
     exec_env = p.Results.exec_env;
     dir_project = fileparts(which('detect_ripples_cnn.m'));
     
@@ -79,7 +87,7 @@ function y_pred = detect_ripples_cnn(data, fs, varargin)
     % ----------------------- 
 
     % Predict
-    y_pred = single(py.cnn.predict(data, channels, fs, model_file, pred_every));
+    y_pred = double(py.array.array('f',py.cnn.predict(data, channels, fs, model_file, pred_every, handle_overlap, verbose)));
 
 
 end
