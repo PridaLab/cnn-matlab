@@ -50,14 +50,9 @@ ripples = ripple_manual_selection(lfp, ripples, channel_ripple, fs, ...
 
 % === Dead channels =======================================================
 
-% Let's say channels 3 and 6 are dead
-lfp_deadch = lfp;
-lfp_deadch(:,[3 6]) = nan;
-
-% Interpolate to get 8 functional channels
-good_channels = [1 2 4 5 7 8];
-channels_to_interpolate = [0 1 0 1 0];
-lfp_interp = interpolate_channels(lfp_deadch(:,good_channels), 'n_inters', channels_to_interpolate);
+% Let's say channels 3 and 6 are dead. Then we want to interpolate them to get 8 fuctional channels
+ch_interpolate_map = [1 2 -1 4 5 -1 7 8]
+lfp_interp = interpolate_channels(lfp, ch_interpolate_map);
 
 % Repeat the same as before
 conda_env = 'C:\Users\Usuario\anaconda3\envs\cnn-env';
@@ -73,8 +68,8 @@ lfp_4channels = lfp(:, [1 3 5 8]);
 % Interpolate to get 8 functional channels. We will interpolate 1 channel
 % between the first two, another one between 2nd and 3rd, and two more
 % interpolated channels between the last two.
-channels_to_interpolate = [1 1 2];
-lfp_interp = interpolate_channels(lfp_4channels, 'n_inters', channels_to_interpolate);
+ch_interpolate_map = [1 -1 2 -1 3 -1 -1 4]
+lfp_interp = interpolate_channels(lfp_4channels, 'n_inters', ch_interpolate_map);
 
 % Repeat the same as before
 conda_env = 'C:\Users\Usuario\anaconda3\envs\cnn-env';
