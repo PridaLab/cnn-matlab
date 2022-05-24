@@ -18,6 +18,21 @@ function ripples_keep = ripple_manual_selection(LFP, ripples, ch_ripple, fs, var
     % Ripples: seconds to samples
     ripples = round(ripples*fs);
 
+    %Check autsave input validity if provided
+    if ~isempty(autosave)
+        [fPath, fName, fExt] = fileparts(autosave);
+        %Check file extension
+        if ~contains(fExt, '.mat')
+            warning("Input 'autosave' does not have a '.mat' extension. Adding it.")
+            fExt = '.mat';
+        end
+        if ~isfolder(fPath)
+            warning("Indicated path in input 'autosave' does not exist. Creating it.")
+            mkdir(fPath);
+        end
+        autosave = fullfile(fPath, [fName, fExt]);
+    end
+
     % Make saving structure
     if ~isempty(autosave) && ~exist(autosave,'file')
         save_struct = {};
