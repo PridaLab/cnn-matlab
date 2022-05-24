@@ -69,6 +69,16 @@ In order to get time intervals of SWRs, a threshold must be chosen. You can use 
 	Once the threshold is set, it automatically finds the intervals where `SWR_prob` is over that threshold. The output of `get_intervals()` is a `n_ripples` x 2 array of beginnings and ends. If `fs` has been given, the output is in seconds; if it's not given, then the output is in timestamps.
 
 
+### Other utils
+
+* **interpolate_channels** 
+	This function generates a new LFP recording with interpolated channels in between. As the CNN was trained with a probe of 20um of separation between electrodes, interpolated channels should be added to achieve a similar channel density. Performance is not affected by this operation. To indicate where to interpolate, `ch_map` in interpolate_channels(y, ch_map) should be a vector of size (1 x n_desired_channels). The channels used as a source are indicated by the number of the channel (>0), and the desired interpolated ones by a -1.
+
+* **ripple_manual_selection**
+	This function provides a graphical user interface (GUI) that shows the detections in windows of 10 x 10 ripples, all windows with the same `win_size` (by default 100ms). The user can choose if the selected detections must be kept ('Keep' option) or killed ('Kill' option), and this option can be modified window by window independently. There is an additional option, `shuffle`, that when `true`, windows are shuffled instead of being presented in chronological order.
+
+
+
 ## Example
 
 In the [test folder](https://github.com/PridaLab/cnn-matlab/tree/master/test) you can find a test main script `test_cnn_matlab.m` that downloads a recording from figshare and runs the CNN detection for several configurations, including dead channels.
