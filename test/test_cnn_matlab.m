@@ -69,7 +69,7 @@ lfp_4channels = lfp(:, [1 3 5 8]);
 % between the first two, another one between 2nd and 3rd, and two more
 % interpolated channels between the last two.
 ch_interpolate_map = [1 -1 2 -1 3 -1 -1 4]
-lfp_interp = interpolate_channels(lfp_4channels, 'n_inters', ch_interpolate_map);
+lfp_interp = interpolate_channels(lfp_4channels, ch_interpolate_map);
 
 % Repeat the same as before
 conda_env = 'C:\Users\Usuario\anaconda3\envs\cnn-env';
