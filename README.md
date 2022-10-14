@@ -1,6 +1,6 @@
 # CNN-ripple detector for MATLAB
 
-This ripple detector uses a Convolutional Neural Network (CNN) originally created for python in [this repository](https://github.com/PridaLab/cnn-ripple). This code is a version that internally calls the python function to output a ripple probability along time. You can check our results in our manuscript ([Navas-Olivé, Amaducci et al. eLife 2022](https://elifesciences.org/articles/77772))
+This ripple detector uses a Convolutional Neural Network (CNN) originally created for python in [this repository](https://github.com/PridaLab/cnn-ripple). This code is a version that internally calls the python function to output a ripple probability along time. You can check our results in our manuscript ([Navas-Olive, Amaducci et al. eLife 2022](https://elifesciences.org/articles/77772))
 
 _**UPDATE!** We have added the option to discard False Positives that come from extreme offset drifts on the recording signal. Just as muscular artifacts affect filter detection of SWRs, extreme offset noise can affect the CNN, but it has been already implemented a solution to counteract this noise._ 
 
